@@ -1,9 +1,14 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron');
+const data = require('./data');
+const templates = require('./templates');
 
+
+let tray = null;
+let mainWindow = null;
 app.on('ready', () => {
-    let mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 600,
-        height: 350,
+        height: 400,
         darkTheme: true,
         resizable: false,
         webPreferences: {
@@ -12,10 +17,14 @@ app.on('ready', () => {
         }
     });
 
+    tray = new Tray(__dirname + '/app/img/icon.png');
+    tray.setContextMenu(Menu.buildFromTemplate(templates.gerarMenuTemplate(mainWindow)))
+
+
     mainWindow.loadURL(`file://${__dirname}/app/index.html`);
 });
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', () => { 
     app.quit();
 });
 
@@ -50,5 +59,12 @@ ipcMain.on('fechar-janela-sobre', () => {
  });
 
  ipcMain.on('curso-parado', (event, curso, tempo)=>{
-    
+        data.salvaDados(curso, tempo)
+        console.log(`O curso ${curso} foi estudado por ${tempo}`);
  });
+
+ ipcMain.on('curso-adicionado', (event, novoCurso) => {
+    let novoTemplate = templates.adicionaCursoNoTray(novoCurso, mainWindow);
+    let novoTrayMenu = Menu.buildFromTemplate(novoTemplate);
+    tray.setContextMenu(novoTrayMenu);
+});

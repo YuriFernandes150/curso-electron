@@ -19,7 +19,7 @@ module.exports = {
     segundosParaTempo(){
         return moment().startOf('day').seconds(segundos).format('HH:mm:ss');
     },
-    parar(){
+    parar(curso){
         clearInterval(timer);
         ipcRenderer.send('curso-parado', curso, this.segundosParaTempo(segundos));
     }
