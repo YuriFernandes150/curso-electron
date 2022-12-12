@@ -17,8 +17,8 @@ module.exports = {
         cursos.forEach((curso) => {
             let menuItem = {
                 label: curso,
-                type: 'radio',  
-                click: () =>{
+                type: 'radio',
+                click: () => {
                     win.send('curso-trocado', curso)
                 }
             }
@@ -47,6 +47,56 @@ module.exports = {
 
         return this.templateInicial;
 
+    },
+    geraMenuPrincipalTemplate(app) {
+        let templateMenu = [
+            {
+                label: 'View',
+                submenu: [{
+                    role: 'reload'
+                },
+                {
+                    role: 'toggledevtools'
+                }
+                ]
+            },
+            {
+                label: 'Window',
+                submenu: [
+                    {
+                        role: 'minimize'
+                    },
+                    {
+                        role: 'close'
+                    }
+                ]
+            },
+            {
+                label: 'Sobre',
+                submenu: [
+                    {
+                        label: 'Sobre o Alura Timer',
+                        click: () => {
+                            ipcMain.emit('abrir-janela-sobre');
+                        },
+                        accelerator: 'CmdOrCtrl+I'
+                    }
+                ]
+            }
+        ];
+        if (process.platform == 'darwin') {
+            templateMenu.unshift({
+                label: app.getName(),
+                submenu: [
+                    {
+                        label: 'Estou rodando no Mac!'
+                    }
+                ]
+            })
+        }
+        return templateMenu;
     }
 
+
 }
+

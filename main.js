@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut } = require('electron');
 const data = require('./data');
 const templates = require('./templates');
 
@@ -19,6 +19,12 @@ app.on('ready', () => {
 
     tray = new Tray(__dirname + '/app/img/icon.png');
     tray.setContextMenu(Menu.buildFromTemplate(templates.gerarMenuTemplate(mainWindow)))
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(templates.geraMenuPrincipalTemplate()));
+
+    globalShortcut.register('CmdOrCtrl+Shift+S', () => {
+        mainWindow.send('atalho-iniciar-parar');
+    });
 
 
     mainWindow.loadURL(`file://${__dirname}/app/index.html`);

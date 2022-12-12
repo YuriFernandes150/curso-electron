@@ -27,9 +27,11 @@ btPlay.addEventListener('click', () => {
     if (play) {
         timer.parar(curso.textContent);
         play = false;
+        new Notification('Parado!');
     } else {
         timer.iniciar(tempo);
         play = true;
+        new Notification('Iniciado!');
     }
     imagens = imagens.reverse();
     btPlay.src = imagens[0];
@@ -37,6 +39,12 @@ btPlay.addEventListener('click', () => {
 })
 
 botaoAdicionar.addEventListener('click', function () {
+
+    if (campoAdicionar.value == '') {
+        console.log('Não posso adicionar um curso com nome vazio');
+        return;
+    }
+
     let novoCurso = campoAdicionar.value;
     curso.textContent = novoCurso;
     tempo.textContent = '00:00:00';
@@ -45,9 +53,19 @@ botaoAdicionar.addEventListener('click', function () {
 });
 
 ipcRenderer.on('curso-trocado', (evt, nomeCurso) => {
+    timer.parar(curso.textContent);
     data.pegaDados(nomeCurso)
         .then((dados) => {
             tempo.textContent = dados.tempo;
+        }).catch((err) => {
+            console.log('O curso ainda não possui um JSON');
+            tempo.textContent = "00:00:00";
         })
     curso.textContent = nomeCurso;
 })
+
+ipcRenderer.on('atalho-iniciar-parar', () => {
+    console.log('Atalho no renderer process');
+    let click = new MouseEvent('click');
+    botaoPlay.dispatchEvent(click);
+});
