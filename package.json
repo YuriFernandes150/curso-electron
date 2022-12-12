@@ -1,0 +1,20 @@
+{
+  "name": "curso-electron",
+  "version": "1.0.0",
+  "description": "Curso de electron da alura, onde faremos um timer.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "curso"
+  ],
+  "author": "YuriFernandes150",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^21.3.0",
+    "jsonfile-promised": "^0.0.1",
+    "moment": "^2.29.4"
+  }
+}
